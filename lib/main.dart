@@ -1,4 +1,4 @@
-import 'package:example/pages/login.dart';
+import 'package:ojochat_app/pages/login.dart';
 import 'package:flutter/material.dart';
 
 void main() {
