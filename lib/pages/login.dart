@@ -1,9 +1,16 @@
+import 'package:ojochat_app/components/auth_input.dart';
+import 'package:ojochat_app/components/icon.dart';
 import 'package:ojochat_app/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'dart:convert';
+
+import 'package:ojochat_app/components/button.dart';
+import 'package:ojochat_app/pages/signup.dart';
+
+// components
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,14 +37,31 @@ class LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(title: const Text('Login')),
-      body: Container(
-        color: const Color(0xFFE1E1E1),
-        height: double.infinity,
-        child: LoadingOverlay(
-          isLoading: isLoading,
-          progressIndicator: const CircularProgressIndicator(),
-          child: loginBody(),
-        ),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background Image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/auth.jpg'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Positioned.fill(
+              child: ColorFiltered(
+            colorFilter: ColorFilter.mode(
+                Colors.grey.withOpacity(0.5), BlendMode.srcATop),
+            child: Container(color: Colors.white.withOpacity(0.85)),
+          )),
+          // Content
+          LoadingOverlay(
+            isLoading: isLoading,
+            progressIndicator: const CircularProgressIndicator(),
+            child: loginBody(),
+          ),
+        ],
       ),
       resizeToAvoidBottomInset: true,
     );
@@ -66,57 +90,17 @@ class LoginPageState extends State<LoginPage> {
           style: TextStyle(fontSize: 15, fontFamily: 'Nunito, sans-serif'),
         ),
         const SizedBox(height: 20),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: const BoxDecoration(),
-          alignment: Alignment.center,
-          child: TextFormField(
-            controller: userController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: 'Username or email',
-              contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24)),
-                borderSide: BorderSide(color: Colors.transparent),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-            ),
-          ),
-        ),
+        CustomAuthInput(
+            labelText: 'Username or email', controller: userController),
         const SizedBox(height: 16),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 5),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: const BoxDecoration(),
-          alignment: Alignment.center,
-          child: TextFormField(
+        CustomAuthInput(
+            labelText: 'Password',
             controller: pwdController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              hintText: 'Password',
-              contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24)),
-                borderSide: BorderSide(color: Color.fromARGB(255, 204, 40, 40)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(24)),
-                borderSide: BorderSide(color: Colors.transparent),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
+            obscureText: true),
+        // const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
+          // padding: const EdgeInsets.only(left: 0, right: 5),
           child: Row(
             children: [
               Transform.scale(
@@ -146,95 +130,37 @@ class LoginPageState extends State<LoginPage> {
           ),
         ),
         const SizedBox(height: 16),
-        SizedBox(
-            width: 80.0,
-            height: 40.0,
-            child: ElevatedButton(
-              onPressed: onLogin,
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color(0xFFFF5252))),
-              child: const Text(
-                'Sign in',
-                style: TextStyle(fontSize: 12),
-              ),
-            )),
+        CustomButton(text: 'Sign in', onPressed: onLogin),
         const SizedBox(height: 16),
         const Text('Login with your social media account'),
         const SizedBox(height: 16),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            Container(
-              width: 30,
-              decoration: const BoxDecoration(
-                color: Color(0xFF3B5998),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(FontAwesome.facebook),
-                iconSize: 15,
-                color: Colors.white,
-                onPressed: () {},
-                highlightColor: Colors.transparent,
-                splashColor: Colors.transparent,
-              ),
+            const CustomIcon(
+              iconData: FontAwesome.facebook,
+              backgroundColor: Color(0xFF3B5998),
             ),
             const SizedBox(width: 10),
-            Container(
-              width: 30,
-              decoration: const BoxDecoration(
-                color: Color(0xFF55ACEE),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(FontAwesome.twitter),
-                iconSize: 15,
-                color: Colors.white,
-                onPressed: () {},
-              ),
+            const CustomIcon(
+              iconData: FontAwesome.twitter,
+              backgroundColor: Color(0xFF55ACEE),
             ),
             const SizedBox(width: 10),
-            Container(
-              width: 30,
-              decoration: const BoxDecoration(
-                color: Color(0xFF0077B5),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(FontAwesome.linkedin),
-                iconSize: 15,
-                color: Colors.white,
-                onPressed: () {},
-              ),
+            const CustomIcon(
+              iconData: FontAwesome.linkedin,
+              backgroundColor: Color(0xFF0077B5),
             ),
             const SizedBox(width: 10),
-            Container(
-              width: 30,
-              decoration: const BoxDecoration(
-                color: Color(0xFFDB4437),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(FontAwesome.google),
-                iconSize: 15,
-                color: Colors.white,
-                onPressed: () {},
-              ),
+            const CustomIcon(
+              iconData: FontAwesome.google,
+              backgroundColor: Color(0xFFDB4437),
             ),
             const SizedBox(width: 10),
-            Container(
-              width: 30,
-              decoration: const BoxDecoration(
-                color: Color(0xFF3F729B),
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(FontAwesome.instagram),
-                iconSize: 15,
-                color: Colors.white,
-                onPressed: () {},
-              ),
+            const CustomIcon(
+              iconData: FontAwesome.instagram,
+              backgroundColor: Color(0xFF3F729B),
             ),
           ],
         ),
@@ -244,7 +170,7 @@ class LoginPageState extends State<LoginPage> {
           children: [
             const Text("Don't have an account?"),
             TextButton(
-              onPressed: () {},
+              onPressed: onSignUp,
               child: const Text(
                 'Sign up now!',
                 style: TextStyle(color: Color(0xFFFF5252), fontSize: 12),
@@ -270,8 +196,6 @@ class LoginPageState extends State<LoginPage> {
     });
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      print(data);
-
       if (data["loggedin"] == true) {
         // ignore: use_build_context_synchronously
         Navigator.of(context).push(MaterialPageRoute(
@@ -311,5 +235,10 @@ class LoginPageState extends State<LoginPage> {
         },
       );
     }
+  }
+
+  void onSignUp() async {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => const SignUpPage()));
   }
 }

@@ -1,4 +1,5 @@
 import 'package:ojochat_app/pages/login.dart';
+import 'package:ojochat_app/pages/signup.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,10 +14,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        routes: {'/login': (BuildContext context) => const LoginPage()},
+        // theme: ThemeData(
+        //   primarySwatch: Colors.blue,
+        // ),
+        routes: {
+          '/login': (BuildContext context) => const LoginPage(),
+          '/register': (context) => const SignUpPage()
+        },
         home: const LoginPage());
   }
 }
